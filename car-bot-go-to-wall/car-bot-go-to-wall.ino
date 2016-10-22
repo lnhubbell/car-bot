@@ -30,11 +30,11 @@ void loop() {
         // Prepare for pulse
         send_time = 0; receive_time = 0;    // reset send/receive times
         // Send the pulse
-        digitalWrite(9, LOW); // make sure output pin is low
+        digitalWrite(TRIGGER_PIN, LOW); // make sure output pin is low
         delayMicroseconds(4);
-        digitalWrite(9, HIGH);
+        digitalWrite(TRIGGER_PIN, HIGH);
         delayMicroseconds(10);
-        digitalWrite(9, LOW);
+        digitalWrite(TRIGGER_PIN, LOW);
         }// if
 
     // Calculate new distance
@@ -43,7 +43,8 @@ void loop() {
         } //if
     
     // Control the motor power based on distance
-    //pwrM1 = max(255,
+    pwrM1 = min(255,distance*10);
+    
     analogWrite(MOTOR1_PIN, pwrM1);
     analogWrite(MOTOR2_PIN, pwrM2);
     
