@@ -1,5 +1,4 @@
 unsigned long send_time = 0;
-
 unsigned long break_time = 0;
 
 void setup() {
@@ -17,12 +16,8 @@ Serial.begin(115200);
   
 }
 
-void loop() {
-  // put your main code here, to run repeatedly:
-  
-//  if (millis()%50 == 0) {
-//    delay(1); // Must wait to avoid multiple pulses in one millis
-  delay(60);
+void loop() {  
+  delayMicroseconds(60000);
   break_time = millis(); 
   digitalWrite(9, LOW);
   delayMicroseconds(4);
@@ -33,7 +28,6 @@ void loop() {
   
     while (!digitalRead(10))  { // Once the pulse is sent, the echo pin should go high, wait till then
         if ((millis()-break_time) > 4000) { // TIMEOUT
-          Serial.println("FUCK YOU FIRST!");
           break;
         }
     }
