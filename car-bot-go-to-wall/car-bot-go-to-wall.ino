@@ -43,13 +43,22 @@ void loop() {
         } //if
     
     // Control the motor power based on distance
-    
     pwrM1 = max(0,min(1,dist/15-1/3));
     pwrM2 = pwrM1;
     
     analogWrite(MOTOR1_PIN, pwrM1);
     analogWrite(MOTOR2_PIN, pwrM2);
-    
+        // Print things
+        Serial.println("-------------------------");
+        Serial.print("send time:      ");
+        Serial.println(send_time);
+        Serial.print("receive time:   ");
+        Serial.println(receive_time);
+        Serial.print("Travel time:    ");
+        Serial.println(receive_time-send_time);
+        Serial.print("Distance:    ");
+        Serial.print((receive_time-send_time)/58);
+        Serial.println("cm.");
 }
 
 ISR(INT1_vect) { // Interrupt vectors on page 92, this is pin 3
