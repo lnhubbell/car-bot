@@ -1,14 +1,14 @@
 // GLOBAL VARIABLES
     unsigned long send_time = 0;        // the number of uS since system start until the pulse was sent
     unsigned long receive_time = 0;     // number of uS since system start until the pulse was received
-    unsigned long distance = 0; 
+    unsigned long dist = 0; 
     
 // INCLUDES AND DEFINES
 #define TRIGGER_PIN 2
 #define ECHO_PIN 3
 #define MOTOR1_PIN 10
 #define MOTOR2_PIN 11
-
+#define MAX_PWR 255
 void setup() {
     Serial.begin(115200);               // start cereal communication
     // Setup inputs and outputs
@@ -39,11 +39,14 @@ void loop() {
 
     // Calculate new distance
     if(receive_time>0){
-        distance = (receive_time-send_time)/58; // distance in centimeters
+        dist = (receive_time-send_time)/58; // distance in centimeters
         } //if
     
     // Control the motor power based on distance
-    //pwrM1 = max(255,
+    
+    pwrM1 = max(0,min(1,dist/15-1/3));
+    pwrM2 = pwrM1;
+    
     analogWrite(MOTOR1_PIN, pwrM1);
     analogWrite(MOTOR2_PIN, pwrM2);
     
