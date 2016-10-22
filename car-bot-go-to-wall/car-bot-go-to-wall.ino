@@ -30,11 +30,11 @@ void loop() {
         // Prepare for pulse
         send_time = 0; receive_time = 0;    // reset send/receive times
         // Send the pulse
-        digitalWrite(9, LOW); // make sure output pin is low
+        digitalWrite(TRIGGER_PIN, LOW); // make sure output pin is low
         delayMicroseconds(4);
-        digitalWrite(9, HIGH);
+        digitalWrite(TRIGGER_PIN, HIGH);
         delayMicroseconds(10);
-        digitalWrite(9, LOW);
+        digitalWrite(TRIGGER_PIN, LOW);
         }// if
 
     // Calculate new distance
@@ -50,6 +50,6 @@ void loop() {
 }
 
 ISR(INT1_vect) { // Interrupt vectors on page 92, this is pin 3
-    send_time = max(send_time,(digitalRead(3))*micros());         // if pin 3 goes from lo to hi, then it's the send time
-    receive_time = max(receive_time,(!digitalRead(3))*micros());  // if pin 3 goes from hi to lo then its the receive time
+    send_time = max(send_time,(digitalRead(ECHO_PIN))*micros());         // if pin 3 goes from lo to hi, then it's the send time
+    receive_time = max(receive_time,(!digitalRead(ECHO_PIN))*micros());  // if pin 3 goes from hi to lo then its the receive time
 } // INT1 ISR
