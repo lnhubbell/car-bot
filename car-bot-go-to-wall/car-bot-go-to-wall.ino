@@ -2,7 +2,7 @@
     unsigned long send_time = 0;        // the number of uS since system start until the pulse was sent
     unsigned long receive_time = 0;     // number of uS since system start until the pulse was received
     unsigned long dist = 0; 
-    
+
 // INCLUDES AND DEFINES
 #define TRIGGER_PIN 2
 #define ECHO_PIN 3
@@ -24,11 +24,15 @@ void setup() {
 }
 
 void loop() {
+  delay(50);
     int pwrM1 = 0; int pwrM2 = 0;
+    
     // If the pulse has been received more than 60ms ago, send out another pulse
-    if(micros()>(receive_time+60000)){
+    if(micros()>(unsigned long)(receive_time+60000)){
         // Prepare for pulse
-        send_time = 0; receive_time = 0;    // reset send/receive times
+           // reset send/receive times
+           send_time = 0; receive_time = 0; 
+           
         // Send the pulse
         digitalWrite(TRIGGER_PIN, LOW); // make sure output pin is low
         delayMicroseconds(4);
@@ -38,21 +42,30 @@ void loop() {
         }// if
 
     // Calculate new distance
-    if(receive_time>0){
+    if((receive_time>0) && (send_time>0)){
         dist = (receive_time-send_time)/58; // distance in centimeters
-        } //if
+        
     
-    // Control the motor power based on distance
-    
-    pwrM1 = max(0,min(1,dist/15-1/3));
-    pwrM2 = pwrM1;
-    
-    analogWrite(MOTOR1_PIN, pwrM1);
-    analogWrite(MOTOR2_PIN, pwrM2);
-    
+        // Control the motor power based on distance
+        
+        //pwrM1 = 255*max(0,min(1,(dist/15)-(1/3)));
+        pwrM1 = max(dist - 255,0);
+        
+        pwrM2 = pwrM1;
+    //    Serial.println(pwrM1);
+        Serial.println(send_time);
+        Serial.println(receive_time);
+        Serial.println(dist);
+        Serial.println(pwrM1);
+        Serial.println("--------------------");
+        
+        analogWrite(MOTOR1_PIN, pwrM1);
+        analogWrite(MOTOR2_PIN,pwrM2);
+    } //if
 }
 
 ISR(INT1_vect) { // Interrupt vectors on page 92, this is pin 3
+
     send_time = max(send_time,(digitalRead(ECHO_PIN))*micros());         // if pin 3 goes from lo to hi, then it's the send time
     receive_time = max(receive_time,(!digitalRead(ECHO_PIN))*micros());  // if pin 3 goes from hi to lo then its the receive time
 } // INT1 ISR
